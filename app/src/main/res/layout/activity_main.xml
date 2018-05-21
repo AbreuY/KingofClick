@@ -186,8 +186,8 @@
                         app:layout_constraintTop_toBottomOf="@+id/txtActive">
 
                         <TextView
-                            android:id="@+id/textView"
-                            android:layout_width="50dp"
+                            android:id="@+id/txtA1"
+                            android:layout_width="70dp"
                             android:layout_height="50dp"
                             android:gravity="center"
                             android:text="+10%"
@@ -215,8 +215,8 @@
                         app:layout_constraintTop_toBottomOf="@+id/container1">
 
                         <TextView
-                            android:id="@+id/textView2"
-                            android:layout_width="50dp"
+                            android:id="@+id/txtA2"
+                            android:layout_width="70dp"
                             android:layout_height="50dp"
                             android:gravity="center"
                             android:text="+20%"
@@ -244,8 +244,8 @@
                         app:layout_constraintTop_toBottomOf="@+id/container2">
 
                         <TextView
-                            android:id="@+id/textView3"
-                            android:layout_width="50dp"
+                            android:id="@+id/txtA3"
+                            android:layout_width="70dp"
                             android:layout_height="50dp"
                             android:gravity="center"
                             android:text="+30%"
@@ -273,8 +273,8 @@
                         app:layout_constraintTop_toBottomOf="@+id/container3">
 
                         <TextView
-                            android:id="@+id/textView4"
-                            android:layout_width="50dp"
+                            android:id="@+id/txtA5"
+                            android:layout_width="70dp"
                             android:layout_height="50dp"
                             android:gravity="center"
                             android:text="+50%"
@@ -312,8 +312,8 @@
                         app:layout_constraintTop_toBottomOf="@+id/txtPassive">
 
                         <TextView
-                            android:id="@+id/textViewPassive1"
-                            android:layout_width="50dp"
+                            android:id="@+id/txtP01"
+                            android:layout_width="70dp"
                             android:layout_height="50dp"
                             android:gravity="center"
                             android:text="+0.1"
@@ -339,8 +339,8 @@
                         app:layout_constraintTop_toBottomOf="@+id/containerPassive1">
 
                         <TextView
-                            android:id="@+id/textViewPassive2"
-                            android:layout_width="50dp"
+                            android:id="@+id/txtP1"
+                            android:layout_width="70dp"
                             android:layout_height="50dp"
                             android:gravity="center"
                             android:text="+10%"
@@ -366,8 +366,8 @@
                         app:layout_constraintTop_toBottomOf="@+id/containerPassive2">
 
                         <TextView
-                            android:id="@+id/textViewPassive3"
-                            android:layout_width="50dp"
+                            android:id="@+id/txtP2"
+                            android:layout_width="70dp"
                             android:layout_height="50dp"
                             android:gravity="center"
                             android:text="+20%"
@@ -393,8 +393,8 @@
                         app:layout_constraintTop_toBottomOf="@+id/containerPassive3">
 
                         <TextView
-                            android:id="@+id/textViewPassive4"
-                            android:layout_width="50dp"
+                            android:id="@+id/txtP3"
+                            android:layout_width="70dp"
                             android:layout_height="50dp"
                             android:gravity="center"
                             android:text="+30%"
@@ -420,8 +420,8 @@
                         app:layout_constraintTop_toBottomOf="@+id/containerPassive4">
 
                         <TextView
-                            android:id="@+id/textViewPassive5"
-                            android:layout_width="50dp"
+                            android:id="@+id/txtP5"
+                            android:layout_width="70dp"
                             android:layout_height="50dp"
                             android:gravity="center"
                             android:text="+50%"
