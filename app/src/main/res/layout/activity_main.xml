@@ -117,7 +117,6 @@
             android:id="@+id/bottom_sheet"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-
             app:behavior_peekHeight="0dp"
             app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
@@ -126,9 +125,9 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:background="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <Button
                     android:id="@+id/btnAdd"
@@ -149,297 +148,31 @@
 
             </android.support.constraint.ConstraintLayout>
 
-            <ScrollView
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/menuContainer"
-                app:layout_constraintVertical_bias="0.0">
-
-                <android.support.constraint.ConstraintLayout
-                    android:id="@+id/toolsContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/txtActive"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Active"
-                        android:textSize="20sp"
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/container1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/txtActive">
-
-                        <TextView
-                            android:id="@+id/txtA1"
-                            android:layout_width="70dp"
-                            android:layout_height="50dp"
-                            android:gravity="center"
-                            android:text="+10%"
-                            android:textColor="@color/black"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <Button
-                            android:id="@+id/btnActive10"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="50"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+            <!--<android.support.constraint.ConstraintLayout-->
+                <!--android:id="@+id/rvShopContainer"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="0dp"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@id/menuContainer">-->
 
 
-                    </android.support.constraint.ConstraintLayout>
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/container2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/container1">
-
-                        <TextView
-                            android:id="@+id/txtA2"
-                            android:layout_width="70dp"
-                            android:layout_height="50dp"
-                            android:gravity="center"
-                            android:text="+20%"
-                            android:textColor="@color/black"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <Button
-                            android:id="@+id/btnActive20"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="100"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvShop"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:nestedScrollingEnabled="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/menuContainer"
+                    android:overScrollMode="never"
+                     />
 
 
-                    </android.support.constraint.ConstraintLayout>
+            <!--</android.support.constraint.ConstraintLayout>-->
 
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/container3"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/container2">
-
-                        <TextView
-                            android:id="@+id/txtA3"
-                            android:layout_width="70dp"
-                            android:layout_height="50dp"
-                            android:gravity="center"
-                            android:text="+30%"
-                            android:textColor="@color/black"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <Button
-                            android:id="@+id/btnActive30"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="200"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                    </android.support.constraint.ConstraintLayout>
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/container4"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/container3">
-
-                        <TextView
-                            android:id="@+id/txtA5"
-                            android:layout_width="70dp"
-                            android:layout_height="50dp"
-                            android:gravity="center"
-                            android:text="+50%"
-                            android:textColor="@color/black"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <Button
-                            android:id="@+id/btnActive50"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="500"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </android.support.constraint.ConstraintLayout>
-
-                    <TextView
-                        android:id="@+id/txtPassive"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Passive"
-                        android:textSize="20sp"
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/container4" />
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/containerPassive1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/txtPassive">
-
-                        <TextView
-                            android:id="@+id/txtP01"
-                            android:layout_width="70dp"
-                            android:layout_height="50dp"
-                            android:gravity="center"
-                            android:text="+0.1"
-                            android:textColor="@color/black"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <Button
-                            android:id="@+id/btnPassive01"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="50"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </android.support.constraint.ConstraintLayout>
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/containerPassive2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/containerPassive1">
-
-                        <TextView
-                            android:id="@+id/txtP1"
-                            android:layout_width="70dp"
-                            android:layout_height="50dp"
-                            android:gravity="center"
-                            android:text="+10%"
-                            android:textColor="@color/black"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <Button
-                            android:id="@+id/btnPassive10"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="50"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </android.support.constraint.ConstraintLayout>
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/containerPassive3"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/containerPassive2">
-
-                        <TextView
-                            android:id="@+id/txtP2"
-                            android:layout_width="70dp"
-                            android:layout_height="50dp"
-                            android:gravity="center"
-                            android:text="+20%"
-                            android:textColor="@color/black"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <Button
-                            android:id="@+id/btnPassive20"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="100"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </android.support.constraint.ConstraintLayout>
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/containerPassive4"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/containerPassive3">
-
-                        <TextView
-                            android:id="@+id/txtP3"
-                            android:layout_width="70dp"
-                            android:layout_height="50dp"
-                            android:gravity="center"
-                            android:text="+30%"
-                            android:textColor="@color/black"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <Button
-                            android:id="@+id/btnPassive30"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="200"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </android.support.constraint.ConstraintLayout>
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/containerPassive5"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/containerPassive4">
-
-                        <TextView
-                            android:id="@+id/txtP5"
-                            android:layout_width="70dp"
-                            android:layout_height="50dp"
-                            android:gravity="center"
-                            android:text="+50%"
-                            android:textColor="@color/black"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <Button
-                            android:id="@+id/btnPassive50"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="500"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </android.support.constraint.ConstraintLayout>
-
-                </android.support.constraint.ConstraintLayout>
-            </ScrollView>
 
         </android.support.constraint.ConstraintLayout>
 

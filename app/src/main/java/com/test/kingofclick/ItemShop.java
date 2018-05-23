@@ -1,51 +1,88 @@
 package com.test.kingofclick;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class ItemShop {
     private double cost;
-    private double procent;
-    private int countOfBuy;
-    private double plus=0.1;
+    private double addCount;
+    private int img;
+    private TypeOfShopItem type;
+    private String name;
 
-    public double getPlus() {
-        return plus;
-    }
-
-    public void setPlus(double plus) {
-        plus*=1.05;
-        this.plus = plus;
-    }
-
-    public ItemShop(double cost, double procent) {
+    public ItemShop(String name,double cost, double addCount, int img,TypeOfShopItem type) {
         this.cost = cost;
-        this.procent = procent;
-
+        this.addCount = addCount;
+        this.img = img;
+        this.type = type;
+        this.name = name;
     }
+
+    public ItemShop() {
+        initItems();
+    }
+
+    private List<ItemShop> items;
 
     public double getCost() {
         return cost;
     }
 
     public void setCost(double cost) {
-        cost*=1.05;
-        this.cost =cost;
+        this.cost = cost;
     }
 
-    public double getProcent() {
-
-        return procent;
+    public double getAddCount() {
+        return addCount;
     }
 
-    public void setProcent(double procent) {
-        procent-=(procent*0.05);
-        this.procent = procent;
+    public void setAddCount(double addCount) {
+        this.addCount = addCount;
     }
 
-    public int getCountOfBuy() {
-        return countOfBuy;
+    public int getImg() {
+        return img;
     }
 
-    public void setCountOfBuy(int countOfBuy) {
-        this.countOfBuy = countOfBuy;
+    public void setImg(int img) {
+        this.img = img;
     }
 
+    public TypeOfShopItem getType() {
+        return type;
+    }
+
+    public void setType(TypeOfShopItem type) {
+        this.type = type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<ItemShop> getItems() {
+        return items;
+    }
+
+    public void setItems(List<ItemShop> items) {
+        this.items = items;
+    }
+
+    private void initItems(){
+        items = new ArrayList<>();
+        items.add(new ItemShop("ACTIVE",1,1,R.drawable.circle_button,TypeOfShopItem.TITLE));
+        items.add(new ItemShop("PerClick",50,1,R.drawable.circle_button,TypeOfShopItem.ACTIVE));
+        items.add(new ItemShop("PASSIVE",1,1,R.drawable.circle_button,TypeOfShopItem.TITLE));
+        items.add(new ItemShop("+1",50,0.1,R.drawable.circle_button,TypeOfShopItem.PASSIVE));
+        items.add(new ItemShop("+3",100,0.3,R.drawable.circle_button,TypeOfShopItem.PASSIVE));
+        items.add(new ItemShop("+5",200,0.5,R.drawable.circle_button,TypeOfShopItem.PASSIVE));
+
+        items.add(new ItemShop("+10",500,1.0,R.drawable.circle_button,TypeOfShopItem.PASSIVE));
+
+    }
 }
