@@ -5,7 +5,18 @@ package com.test.kingofclick;
  */
 
 public enum TypeOfShopItem {
-    PASSIVE,
-    ACTIVE,
-    TITLE
+    PASSIVE(1),
+    ACTIVE(2),
+    TITLE(3);
+
+    private int i;
+
+    public int getI() {
+        return i;
+    }
+
+    TypeOfShopItem(int i){
+        this.i=i;
+
+    }
 }

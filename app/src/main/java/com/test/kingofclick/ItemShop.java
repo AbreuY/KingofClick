@@ -11,6 +11,16 @@ public class ItemShop {
     private TypeOfShopItem type;
     private String name;
 
+    public boolean isEnable() {
+        return isEnable;
+    }
+
+    public void setEnable(boolean enable) {
+        isEnable = enable;
+    }
+
+    private boolean isEnable;
+
     public ItemShop(String name,double cost, double addCount, int img,TypeOfShopItem type) {
         this.cost = cost;
         this.addCount = addCount;
@@ -30,6 +40,7 @@ public class ItemShop {
     }
 
     public void setCost(double cost) {
+        cost+=cost*0.02;
         this.cost = cost;
     }
 
@@ -76,13 +87,12 @@ public class ItemShop {
     private void initItems(){
         items = new ArrayList<>();
         items.add(new ItemShop("ACTIVE",1,1,R.drawable.circle_button,TypeOfShopItem.TITLE));
-        items.add(new ItemShop("PerClick",50,1,R.drawable.circle_button,TypeOfShopItem.ACTIVE));
+        items.add(new ItemShop("PerClick",50,1,R.drawable.test,TypeOfShopItem.ACTIVE));
         items.add(new ItemShop("PASSIVE",1,1,R.drawable.circle_button,TypeOfShopItem.TITLE));
-        items.add(new ItemShop("+1",50,0.1,R.drawable.circle_button,TypeOfShopItem.PASSIVE));
-        items.add(new ItemShop("+3",100,0.3,R.drawable.circle_button,TypeOfShopItem.PASSIVE));
-        items.add(new ItemShop("+5",200,0.5,R.drawable.circle_button,TypeOfShopItem.PASSIVE));
-
-        items.add(new ItemShop("+10",500,1.0,R.drawable.circle_button,TypeOfShopItem.PASSIVE));
+        items.add(new ItemShop("+1",50,0.1,R.drawable.test,TypeOfShopItem.PASSIVE));
+        items.add(new ItemShop("+3",100,0.3,R.drawable.test,TypeOfShopItem.PASSIVE));
+        items.add(new ItemShop("+5",200,0.5,R.drawable.test,TypeOfShopItem.PASSIVE));
+        items.add(new ItemShop("+10",500,1.0,R.drawable.test,TypeOfShopItem.PASSIVE));
 
     }
 }

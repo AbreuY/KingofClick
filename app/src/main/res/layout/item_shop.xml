@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/txtItemCost"
@@ -45,15 +46,16 @@
         app:layout_constraintStart_toEndOf="@+id/ivItemIcon"
         app:srcCompat="@drawable/circle_button" />
 
-    <TextView
-        android:id="@+id/txtAddCount"
+    <Button
+        android:id="@+id/btnAddCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

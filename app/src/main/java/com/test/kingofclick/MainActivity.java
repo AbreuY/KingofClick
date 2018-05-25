@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView txtPassiveCount;
     private Button btnShopMenu;
     private TextView txtMoney;
+
+    private ItemShop itemShop;
+    private ItemShopAdapter itemShopAdapter;
 
 
     private VideoAdvertising videoAdvertising;
@@ -107,12 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnCloseShopMenu.setOnClickListener(this);
 
         //нахождение rv
-        ItemShop itemShop = new ItemShop();
-        rvShop = findViewById(R.id.rvShop);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        rvShop.setLayoutManager(llm);
-        ItemShopAdapter itemShopAdapter = new ItemShopAdapter(itemShop.getItems());
-        rvShop.setAdapter(itemShopAdapter);
+
 
         View bottomSheet = findViewById(R.id.bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -234,9 +233,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Thread.sleep(1000);
                         count += passiveCount;
                         publishProgress(count, countPerClick, passiveCount);
+
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+
                 }
             }
 
@@ -246,8 +247,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String s2 = String.format(Locale.ENGLISH, "%.2f", values[0]);
                 txtCount.setText(s2);
                 txtMoney.setText(String.format(Locale.ENGLISH, "%.2f", values[0]));
+
+                for (int i =0;i<itemShop.getItems().size();i++){
+                    ItemShop item = itemShop.getItems().get(i);
+                    Log.w("TAG","count" + values[0]);
+                    Log.w("TAG","cost" + itemShop.getItems().get(1).getCost());
+                    if (values[0]>= item.getCost() && !item.isEnable()){
+                        item.setEnable(true);
+                        itemShopAdapter.notifyItemChanged(i, Boolean.FALSE);
+
+
+
+                    }
+                    if (values[0]<item.getCost()){
+                        item.setEnable(false);
+                        itemShopAdapter.notifyItemChanged(i, Boolean.FALSE);
+
+                    }
+                }
             }
         }.execute();
+
     }
 
 
@@ -262,6 +282,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 buildAlertDialogCountFromDate();
             }
         }
+
+//        itemShop  = new ItemShop();
+        rvShop = findViewById(R.id.rvShop);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        rvShop.setLayoutManager(llm);
+        itemShopAdapter = new ItemShopAdapter(itemShop.getItems());
+        rvShop.setAdapter(itemShopAdapter);
+        itemShopAdapter.setOnItemClickListener(new ItemShopAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                if (count>=itemShop.getItems().get(position).getCost()) {
+                    count -= itemShop.getItems().get(position).getCost();
+                    if (itemShop.getItems().get(position).getType() == TypeOfShopItem.ACTIVE) {
+                        countPerClick += itemShop.getItems().get(position).getAddCount();
+                        btnPlus.setText(String.format(Locale.ENGLISH, "+%.2f", (countPerClick)));
+                    } else {
+                        passiveCount += itemShop.getItems().get(position).getAddCount();
+                        txtPassiveCount.setText(String.format(Locale.ENGLISH, "+%.2f", (passiveCount)));
+                    }
+
+                    itemShop.getItems().get(position).setCost(itemShop.getItems().get(position).getCost());
+                    txtCount.setText(String.format(Locale.ENGLISH, "%.2f", (count)));
+                    txtMoney.setText(String.format(Locale.ENGLISH, "%.2f", (count)));
+                }
+                if (count<itemShop.getItems().get(position).getCost())
+                    itemView.findViewById(R.id.btnAddCount).setEnabled(false);
+                itemShop.getItems().get(position).setEnable(false);
+
+
+            }
+        });
 
     }
 
@@ -278,6 +329,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editor.putFloat(Consts.COUNT_PER_CLICK.toString(), (float) countPerClick);
         editor.putFloat(Consts.PASSIVE_COUNT.toString(), (float) passiveCount);
         editor.putLong(Consts.START_DATE.toString(), Calendar.getInstance().getTimeInMillis());
+
+
+        Gson gson = new Gson();
+        String json = gson.toJson(itemShop);
+        editor.putString("itemShop", json);
         editor.apply();
     }
 
@@ -298,6 +354,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txtPassiveCount.setText(s);
         txtMoney.setText(String.format(Locale.ENGLISH, "Ваши деньги: %.2f", (count)));
         btnPlus.setText(String.format(Locale.ENGLISH, "+%.2f", (countPerClick)));
+
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("itemShop", newShop());
+        itemShop = gson.fromJson(json,ItemShop.class);
     }
 
     public void buildAlertDialogCountFromDate() {
@@ -345,5 +405,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         AlertDialog alert = builder.create();
         alert.show();
+    }
+    public String newShop(){
+        Gson gson = new Gson();
+
+        ItemShop itemShop=new ItemShop();
+        String json = gson.toJson(itemShop);
+        return json;
+
     }
 }
