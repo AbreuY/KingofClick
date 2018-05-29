@@ -1,10 +1,11 @@
 package com.test.kingofclick;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ItemShop {
+public class ItemShop implements Serializable{
     private double cost;
     private double addCount;
     private int img;

@@ -1,12 +1,17 @@
 package com.test.kingofclick;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -26,6 +31,15 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -63,7 +77,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //лист с магазином
     private RecyclerView rvShop;
 
+    private static final String userDir = Environment.getExternalStorageDirectory().getAbsolutePath()
+            + "/KingOFClicks/shop.is";
 
+
+
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 111: {
+                hasPermissions = true;
+                for (int i = 0; i < permissions.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        System.out.println("Permissions --> " + "Permission Granted: " + permissions[i]);
+
+                    } else if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                        System.out.println("Permissions --> " + "Permission Denied: " + permissions[i]);
+                        hasPermissions = false;
+                    }
+                }
+
+                if (hasPermissions) {
+                    finish();
+                    startActivity(getIntent());
+                } else {
+                    finish();
+                    //android.os.Process.killProcess(android.os.Process.myPid());
+                }
+            }
+            break;
+            default: {
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }
+    }
+
+    private void checkPermissions() {
+        if (!hasPermissions) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!hasPermissions(PERMISSIONS)) {
+                    requestPermissions(PERMISSIONS, 111);
+                } else {
+                    hasPermissions = true;
+                }
+            }
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,6 +194,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+
+        hasPermissions = hasPermissions(PERMISSIONS);
+        if (!hasPermissions) {
+            checkPermissions();
+        }
+        if(hasPermissions){
+            String userDir = this.userDir;
+            File createDir = new File(userDir);
+            createDir.mkdirs();
+//            File file = new File(userDir,"kings.res");
+//            try {
+//                BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+//                bw.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        }
+
+
+
+    }
+
+    private static String[] PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE
+    };
+    private boolean hasPermissions = Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
+
+    public boolean hasPermissions(String[] permissions) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissions != null) {
+            for (String permission : permissions) {
+                if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override
@@ -250,8 +347,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 for (int i =0;i<itemShop.getItems().size();i++){
                     ItemShop item = itemShop.getItems().get(i);
-                    Log.w("TAG","count" + values[0]);
-                    Log.w("TAG","cost" + itemShop.getItems().get(1).getCost());
+//                    Log.w("TAG","count" + values[0]);
+//                    Log.w("TAG","cost" + itemShop.getItems().get(1).getCost());
                     if (values[0]>= item.getCost() && !item.isEnable()){
                         item.setEnable(true);
                         itemShopAdapter.notifyItemChanged(i, Boolean.FALSE);
@@ -274,7 +371,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        load();
+        try {
+            load();
+        } catch (IOException e) {
+            Log.w("TAG","ERROR " + e.getMessage());
+        }
         passiveCounter();
         if (passiveCount != 0.0) {
 //            passiveCounter(passiveCount);
@@ -320,6 +421,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPause() {
         super.onPause();
         save();
+        Log.d("TAG","called pause");
     }
 
     public void save() {
@@ -330,14 +432,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editor.putFloat(Consts.PASSIVE_COUNT.toString(), (float) passiveCount);
         editor.putLong(Consts.START_DATE.toString(), Calendar.getInstance().getTimeInMillis());
 
-
-        Gson gson = new Gson();
-        String json = gson.toJson(itemShop);
-        editor.putString("itemShop", json);
+        try {
+            FileOutputStream fos = new FileOutputStream(userDir+"/kings.res");
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(itemShop);
+            os.close();
+        } catch (IOException w) {
+            w.printStackTrace();
+        }
+//        Gson gson = new Gson();
+//        String json = gson.toJson(itemShop);
+//        editor.putString("itemShop", json);
         editor.apply();
     }
 
-    public void load() {
+    public void load() throws IOException {
         SharedPreferences sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
         count = sharedPreferences.getFloat(Consts.COUNT.toString(), 0.f);
         countPerClick = sharedPreferences.getFloat(Consts.COUNT_PER_CLICK.toString(), 1.f);
@@ -354,10 +463,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txtPassiveCount.setText(s);
         txtMoney.setText(String.format(Locale.ENGLISH, "Ваши деньги: %.2f", (count)));
         btnPlus.setText(String.format(Locale.ENGLISH, "+%.2f", (countPerClick)));
+        try {
+            FileInputStream fis = new FileInputStream(userDir+"/kings.res");
+            ObjectInputStream is = new ObjectInputStream(fis);
 
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString("itemShop", newShop());
-        itemShop = gson.fromJson(json,ItemShop.class);
+            itemShop = (ItemShop) is.readObject();
+            is.close();
+            fis.close();
+
+        }catch (FileNotFoundException e){
+            Log.w("TAG","no file " + e.getMessage());
+            itemShop=new ItemShop();
+        }
+        catch (IOException w) {
+            w.printStackTrace();
+            Log.w("TAG","ERROR " + w.getMessage());
+            itemShop=new ItemShop();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+//        Gson gson = new Gson();
+//        String json = sharedPreferences.getString("itemShop", newShop());
+//        itemShop = gson.fromJson(json,ItemShop.class);
+
     }
 
     public void buildAlertDialogCountFromDate() {
