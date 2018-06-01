@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="@color/white"
+    >
 
     <TextView
         android:id="@+id/txtItemCost"
         android:layout_width="70dp"
-        android:layout_height="25dp"
+        android:layout_height="20dp"
         android:gravity="center"
         android:text="TextView"
         android:textColor="@color/black"
@@ -18,8 +19,8 @@
 
     <ImageView
         android:id="@+id/ivItemIcon"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -31,7 +32,7 @@
     <TextView
         android:id="@+id/txtItemName"
         android:layout_width="100dp"
-        android:layout_height="30dp"
+        android:layout_height="20dp"
         android:layout_marginStart="8dp"
         android:text="TextView"
         app:layout_constraintStart_toEndOf="@+id/ivItemIcon"
@@ -39,8 +40,8 @@
 
     <ImageView
         android:id="@+id/ivMoneyIcon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/ivItemIcon"
         app:layout_constraintStart_toEndOf="@+id/ivItemIcon"
@@ -48,12 +49,13 @@
 
     <Button
         android:id="@+id/btnAddCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="75dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:text="Button"
+        android:background="@drawable/shop_button_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

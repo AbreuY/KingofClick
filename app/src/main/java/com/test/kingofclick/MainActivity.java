@@ -1,12 +1,17 @@
 package com.test.kingofclick;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -26,7 +31,16 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -55,13 +69,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private boolean bonusX2PerClick = false;
 
-//всплывающее меню
+    //всплывающее меню
     private BottomSheetBehavior mBottomSheetBehavior;
     private boolean isClickOnShopMenu = false;
     private Button btnCloseShopMenu;
 
     //лист с магазином
     private RecyclerView rvShop;
+
+
+    private static final String userDir = Environment.getExternalStorageDirectory().getAbsolutePath()
+            + "/KingOFClicks/shop.is";
+
+    //permissions
+    private static String[] PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE
+    };
+    private boolean hasPermissions = Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
+
 
 
     @Override
@@ -106,13 +130,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //всплывающее меню
 
 
-
         btnCloseShopMenu = findViewById(R.id.btnAdd);
         btnCloseShopMenu.setOnClickListener(this);
 
         //нахождение rv
 
-
+        //всплывающее меню
         View bottomSheet = findViewById(R.id.bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         btnShopMenu = findViewById(R.id.btnShop);
@@ -132,6 +155,66 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+
+        //проверка и получение прав на запись
+        hasPermissions = hasPermissions(PERMISSIONS);
+        if (!hasPermissions) {
+            checkPermissions();
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 111: {
+                hasPermissions = true;
+                for (int i = 0; i < permissions.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        System.out.println("Permissions --> " + "Permission Granted: " + permissions[i]);
+
+                    } else if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                        System.out.println("Permissions --> " + "Permission Denied: " + permissions[i]);
+                        hasPermissions = false;
+                    }
+                }
+
+                if (hasPermissions) {
+                    finish();
+                    startActivity(getIntent());
+                } else {
+                    finish();
+                    //android.os.Process.killProcess(android.os.Process.myPid());
+                }
+            }
+            break;
+            default: {
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }
+    }
+
+    private void checkPermissions() {
+        if (!hasPermissions) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!hasPermissions(PERMISSIONS)) {
+                    requestPermissions(PERMISSIONS, 111);
+                } else {
+                    hasPermissions = true;
+                }
+            }
+        }
+    }
+
+    public boolean hasPermissions(String[] permissions) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissions != null) {
+            for (String permission : permissions) {
+                if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override
@@ -153,12 +236,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     count += countPerClick * 2;
                     String s2 = String.format(Locale.ENGLISH, "+%.2f", (countPerClick * 2));
                     btnPlus.setText(s2);
-                    txtMoney.setText(String.format(Locale.ENGLISH, "+%.2f", (count)));
+                    txtMoney.setText(String.format(Locale.ENGLISH, "%.2f", (count)));
                 } else {
                     count += countPerClick;
                     String s2 = String.format(Locale.ENGLISH, "+%.2f", (countPerClick));
                     btnPlus.setText(s2);
-                    txtMoney.setText(String.format(Locale.ENGLISH, "+%.2f", (count)));
+                    txtMoney.setText(String.format(Locale.ENGLISH, "%.2f", (count)));
                 }
                 txtCount.setText(String.format(Locale.ENGLISH, "%.2f", count));
 
@@ -178,6 +261,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             public void onTick(long millisUntilFinished) {
                                 bonusX2PerClick = true;
                             }
+
                             @Override
                             public void onFinish() {
                                 bonusX2PerClick = false;
@@ -248,18 +332,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 txtCount.setText(s2);
                 txtMoney.setText(String.format(Locale.ENGLISH, "%.2f", values[0]));
 
-                for (int i =0;i<itemShop.getItems().size();i++){
+                for (int i = 0; i < itemShop.getItems().size(); i++) {
                     ItemShop item = itemShop.getItems().get(i);
-                    Log.w("TAG","count" + values[0]);
-                    Log.w("TAG","cost" + itemShop.getItems().get(1).getCost());
-                    if (values[0]>= item.getCost() && !item.isEnable()){
+                    if (values[0] >= item.getCost() && !item.isEnable()) {
                         item.setEnable(true);
                         itemShopAdapter.notifyItemChanged(i, Boolean.FALSE);
 
 
-
                     }
-                    if (values[0]<item.getCost()){
+                    if (values[0] < item.getCost()) {
                         item.setEnable(false);
                         itemShopAdapter.notifyItemChanged(i, Boolean.FALSE);
 
@@ -275,13 +356,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
         load();
-        passiveCounter();
-        if (passiveCount != 0.0) {
+
+        if (passiveCount != 0.0 ) {
 //            passiveCounter(passiveCount);
             if (countFromDate > 50) {
                 buildAlertDialogCountFromDate();
             }
         }
+
 
 //        itemShop  = new ItemShop();
         rvShop = findViewById(R.id.rvShop);
@@ -292,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         itemShopAdapter.setOnItemClickListener(new ItemShopAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
-                if (count>=itemShop.getItems().get(position).getCost()) {
+                if (count >= itemShop.getItems().get(position).getCost()) {
                     count -= itemShop.getItems().get(position).getCost();
                     if (itemShop.getItems().get(position).getType() == TypeOfShopItem.ACTIVE) {
                         countPerClick += itemShop.getItems().get(position).getAddCount();
@@ -306,7 +388,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     txtCount.setText(String.format(Locale.ENGLISH, "%.2f", (count)));
                     txtMoney.setText(String.format(Locale.ENGLISH, "%.2f", (count)));
                 }
-                if (count<itemShop.getItems().get(position).getCost())
+                if (count < itemShop.getItems().get(position).getCost())
                     itemView.findViewById(R.id.btnAddCount).setEnabled(false);
                 itemShop.getItems().get(position).setEnable(false);
 
@@ -317,13 +399,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        save();
+    protected void onPostResume() {
+        super.onPostResume();
+        passiveCounter();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        save();
+
+        Log.d("TAG", "PAUSE");
+    }
+
+
     public void save() {
-        SharedPreferences sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("settingsKingofClicks", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat(Consts.COUNT.toString(), (float) count);
         editor.putFloat(Consts.COUNT_PER_CLICK.toString(), (float) countPerClick);
@@ -331,14 +423,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editor.putLong(Consts.START_DATE.toString(), Calendar.getInstance().getTimeInMillis());
 
 
-        Gson gson = new Gson();
-        String json = gson.toJson(itemShop);
-        editor.putString("itemShop", json);
         editor.apply();
+
+        try {
+            FileOutputStream fos = new FileOutputStream(userDir+"/kings.res");
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(itemShop);
+            os.close();
+        } catch (IOException w) {
+            w.printStackTrace();
+        }
     }
 
     public void load() {
-        SharedPreferences sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
+        //загрузка переменных(кроме магазина)
+        SharedPreferences sharedPreferences = getSharedPreferences("settingsKingofClicks", MODE_PRIVATE);
         count = sharedPreferences.getFloat(Consts.COUNT.toString(), 0.f);
         countPerClick = sharedPreferences.getFloat(Consts.COUNT_PER_CLICK.toString(), 1.f);
         passiveCount = sharedPreferences.getFloat(Consts.PASSIVE_COUNT.toString(), 0.f);
@@ -348,6 +447,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (betweenDate > 5.0) {
             countFromDate = (double) betweenDate * passiveCount;
         }
+
+        //установка значений на view
         String s2 = String.format(Locale.ENGLISH, "%.2f", (count));
         txtCount.setText(s2);
         String s = String.format(Locale.ENGLISH, "+%.2f", (passiveCount));
@@ -355,9 +456,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txtMoney.setText(String.format(Locale.ENGLISH, "Ваши деньги: %.2f", (count)));
         btnPlus.setText(String.format(Locale.ENGLISH, "+%.2f", (countPerClick)));
 
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString("itemShop", newShop());
-        itemShop = gson.fromJson(json,ItemShop.class);
+        //загрузка магазина
+        try {
+            FileInputStream fis = new FileInputStream(userDir+"/kings.res");
+            ObjectInputStream is = new ObjectInputStream(fis);
+
+            itemShop = (ItemShop) is.readObject();
+            is.close();
+            fis.close();
+
+        }catch (FileNotFoundException e){
+            Log.w("TAG","no file " + e.getMessage());
+            itemShop=new ItemShop();
+            if(hasPermissions) {
+                String userDir = this.userDir;
+                File createDir = new File(userDir);
+                createDir.mkdirs();
+            }
+        }
+        catch (IOException w) {
+            w.printStackTrace();
+//            Log.w("TAG","ERROR " + w.getMessage());
+//            itemShop=new ItemShop();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public void buildAlertDialogCountFromDate() {
@@ -406,12 +531,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog alert = builder.create();
         alert.show();
     }
-    public String newShop(){
-        Gson gson = new Gson();
 
-        ItemShop itemShop=new ItemShop();
-        String json = gson.toJson(itemShop);
-        return json;
-
-    }
 }

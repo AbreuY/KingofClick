@@ -1,10 +1,11 @@
 package com.test.kingofclick;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ItemShop {
+public class ItemShop implements Serializable{
     private double cost;
     private double addCount;
     private int img;
@@ -40,7 +41,12 @@ public class ItemShop {
     }
 
     public void setCost(double cost) {
-        cost+=cost*0.02;
+        if(type==TypeOfShopItem.ACTIVE){
+            cost*=2;
+        }else {
+            cost+=cost*0.3;
+        }
+
         this.cost = cost;
     }
 
@@ -89,10 +95,10 @@ public class ItemShop {
         items.add(new ItemShop("ACTIVE",1,1,R.drawable.circle_button,TypeOfShopItem.TITLE));
         items.add(new ItemShop("PerClick",50,1,R.drawable.test,TypeOfShopItem.ACTIVE));
         items.add(new ItemShop("PASSIVE",1,1,R.drawable.circle_button,TypeOfShopItem.TITLE));
-        items.add(new ItemShop("+1",50,0.1,R.drawable.test,TypeOfShopItem.PASSIVE));
-        items.add(new ItemShop("+3",100,0.3,R.drawable.test,TypeOfShopItem.PASSIVE));
-        items.add(new ItemShop("+5",200,0.5,R.drawable.test,TypeOfShopItem.PASSIVE));
-        items.add(new ItemShop("+10",500,1.0,R.drawable.test,TypeOfShopItem.PASSIVE));
+        items.add(new ItemShop("немножко",50,0.1,R.drawable.test,TypeOfShopItem.PASSIVE));
+        items.add(new ItemShop("множко",100,0.3,R.drawable.test,TypeOfShopItem.PASSIVE));
+        items.add(new ItemShop("супермножко",200,0.5,R.drawable.test,TypeOfShopItem.PASSIVE));
+        items.add(new ItemShop("гипермножко",500,1.0,R.drawable.test,TypeOfShopItem.PASSIVE));
 
     }
 }

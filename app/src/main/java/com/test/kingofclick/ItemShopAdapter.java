@@ -106,7 +106,7 @@ public class ItemShopAdapter extends RecyclerView.Adapter{
             itemShopViewHolder.ivMoneyIcon.setImageResource(R.drawable.money_icon);
             itemShopViewHolder.ivItemIcon.setImageResource(items.get(position).getImg());
             itemShopViewHolder.btnAddCount.setText(String.format(Locale.ENGLISH,"+%.2f",items.get(position).getAddCount()));
-            itemShopViewHolder.txtItemCost.setText(String.format(Locale.ENGLISH,"+%.2f",items.get(position).getCost()));
+            itemShopViewHolder.txtItemCost.setText(String.format(Locale.ENGLISH,"%.2f",items.get(position).getCost()));
             itemShopViewHolder.txtName.setText(items.get(position).getName());
 
         }
